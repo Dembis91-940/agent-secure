@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Audit gratuit — Score de risque de vos agents IA | AgentSecure</title>
 <meta name="description" content="Audit gratuit en 15 questions : mesurez le niveau de sécurité de vos agents IA en 5 minutes. Score /100, 4 niveaux de risque, 5 recommandations personnalisées, export PDF.">
+<meta property="og:title" content="AgentSecure — Audit gratuit de vos agents IA">
+<meta property="og:description" content="Audit gratuit en 15 questions : score de risque de vos agents IA sur 100, 4 niveaux de risque et 5 recommandations personnalisées. Packs à partir de 49 €.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "AgentSecure — Audit gratuit de vos agents IA",
+  "description": "Audit gratuit en 15 questions : score de risque de vos agents IA sur 100, 4 niveaux de risque et 5 recommandations personnalisées. Packs à partir de 49 €.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "EUR",
+    "price": "49",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -298,6 +317,12 @@
     .lv-amber{background:#b7950b}
     .lv-green{background:#0a7a3d}
   }
+
+  /* Révélation progressive au scroll (non intrusive) */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media print{.reveal{opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>
@@ -311,7 +336,7 @@
 </nav>
 
 <!-- ================= HERO AUDIT ================= -->
-<header class="audit-hero">
+<header class="audit-hero reveal">
   <div class="wrap">
     <span class="badge"><span class="dot-live"></span> AUDIT GRATUIT — SANS ENGAGEMENT</span>
     <h1>Quel est le niveau de risque de <span class="hl">vos agents IA</span> ?</h1>
@@ -385,18 +410,18 @@
 </section>
 
 <!-- ================= CTA BAS ================= -->
-<section class="cta-band no-print">
+<section class="cta-band no-print reveal">
   <div class="wrap">
     <h2>Votre score en main, <span class="hl">passez à l'action</span></h2>
     <p>L'audit vous dit où vous en êtes. Les packs vous donnent le mode d'emploi pour sécuriser vos agents — procédures prêtes à l'emploi, sans jargon.</p>
     <div class="cta-cards">
-      <a class="cta-card" href="index.html#offres">
+      <a class="cta-card reveal" href="index.html#offres">
         <div class="cc-name">Pack Protection</div>
         <div class="cc-price">49 € <small>· une fois</small></div>
         <p>Checklist 40 points + 4 procédures : moindre privilège, validation humaine, monitoring, journaux.</p>
         <span class="cc-go">Découvrir ▸</span>
       </a>
-      <a class="cta-card" href="index.html#offres">
+      <a class="cta-card reveal" href="index.html#offres">
         <div class="cc-name">Pack Entreprise</div>
         <div class="cc-price">149 € <small>· une fois</small></div>
         <p>Audit complet, plan de correction priorisé et lettre de conformité pour vos clients.</p>
@@ -884,6 +909,23 @@
 
   restore();
   update();
+})();
+</script>
+<script>
+/* Révélation au scroll — IntersectionObserver, fallback si absent */
+(function(){
+  var reveals = document.querySelectorAll(".reveal");
+  if(!reveals.length) return;
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add("visible"); io.unobserve(entry.target); }
+      });
+    }, {threshold: .12});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add("visible"); });
+  }
 })();
 </script>
 </body>

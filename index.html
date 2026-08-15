@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentSecure — Sécurisez vos agents IA | Audit gratuit pour PME</title>
 <meta name="description" content="Vos agents IA travaillent. Qui les surveille ? AgentSecure sécurise les agents IA des PME : audit de risque gratuit, checklist 40 points, procédures de moindre privilège, validation humaine, monitoring et journaux.">
+<meta property="og:title" content="AgentSecure — Sécurisation de vos agents IA">
+<meta property="og:description" content="Audit de risque gratuit, checklist de protection en 40 points et procédures de moindre privilège pour sécuriser les agents IA de votre PME. Packs à partir de 49 €.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "AgentSecure — Sécurisation de vos agents IA",
+  "description": "Audit de risque gratuit, checklist de protection en 40 points et procédures de moindre privilège pour sécuriser les agents IA de votre PME. Packs à partir de 49 €.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "EUR",
+    "price": "49",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -339,6 +358,12 @@
     .hero-cta .btn{width:100%;justify-content:center}
     .term-body{font-size:11.4px}
   }
+
+  /* Révélation progressive au scroll (non intrusive) */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media print{.reveal{opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>
@@ -400,7 +425,7 @@
 <!-- ================= CONTEXTE 2026 ================= -->
 <section id="contexte">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-tag">cat ./contexte-2026.log</div>
       <h2>Le marché a basculé : <span class="hl">de « pourquoi adopter » à « comment contenir »</span></h2>
       <p>Les agents voyous font la une. Les coûts s'effondrent. L'adoption explose dans les PME — et la sécurité des agents devient le nouveau champ de bataille.</p>
@@ -428,7 +453,7 @@
 <!-- ================= MENACES ================= -->
 <section id="menaces" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-tag">ls ./menaces-reelles</div>
       <h2>Trois menaces réelles, <span class="hl">pas de la science-fiction</span></h2>
       <p>Ce sont les scénarios que nous voyons dans les PME qui déploient des agents sans garde-fous. Chacun d'eux se règle — mais seulement si vous le savez.</p>
@@ -477,7 +502,7 @@
 <!-- ================= PILIERS ================= -->
 <section id="piliers">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-tag">./architecture-defense --afficher</div>
       <h2>Quatre piliers pour <span class="hl">contenir vos agents</span></h2>
       <p>La même méthode que les SOC des grandes entreprises, simplifiée pour les PME. Chaque pilier se met en place en quelques jours — pas en quelques mois.</p>
@@ -514,13 +539,13 @@
 <!-- ================= OFFRES ================= -->
 <section id="offres" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-tag">./offres --disponibles</div>
       <h2>Trois offres, <span class="hl">un objectif : reprendre le contrôle</span></h2>
       <p>Commencez par l'audit gratuit — il est réel, complet, et vous donne un score de risque exploitable en 5 minutes.</p>
     </div>
     <div class="offers">
-      <article class="offer">
+      <article class="offer reveal">
         <div class="name">Audit express</div>
         <div class="price">0 €<small> / gratuit</small></div>
         <div class="price-note">sans engagement, résultat immédiat</div>
@@ -547,7 +572,7 @@
         </ul>
         <a class="btn btn-primary" href="#contact" data-offer="protection">Commander — 49 €</a>
       </article>
-      <article class="offer">
+      <article class="offer reveal">
         <div class="name">Pack Entreprise</div>
         <div class="price">149 €<small> / une fois</small></div>
         <div class="price-note">audit complet + plan de correction</div>
@@ -578,7 +603,7 @@
         <b>▸ Direct :</b> vous parlez à l'expert, pas à un commercial.
       </div>
     </div>
-    <form class="cform" id="leadForm" novalidate>
+    <form class="cform reveal" id="leadForm" novalidate>
       <input type="hidden" name="site" value="AgentSecure">
       <div class="field">
         <label for="name">Votre nom</label>
@@ -683,6 +708,23 @@
       });
     });
   })();
+</script>
+<script>
+/* Révélation au scroll — IntersectionObserver, fallback si absent */
+(function(){
+  var reveals = document.querySelectorAll(".reveal");
+  if(!reveals.length) return;
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add("visible"); io.unobserve(entry.target); }
+      });
+    }, {threshold: .12});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add("visible"); });
+  }
+})();
 </script>
 </body>
 </html>

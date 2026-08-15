@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentSecure — Sécurisez vos agents IA | Audit gratuit pour PME</title>
+<meta name="description" content="Vos agents IA travaillent. Qui les surveille ? AgentSecure sécurise les agents IA des PME : audit de risque gratuit, checklist 40 points, procédures de moindre privilège, validation humaine, monitoring et journaux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050a08;
+    --bg-2:#081210;
+    --panel:#0a1512;
+    --panel-2:#0d1a16;
+    --line:rgba(57,255,136,.14);
+    --line-strong:rgba(57,255,136,.38);
+    --green:#39ff88;
+    --green-dim:#1fbf6a;
+    --green-deep:#0e5c38;
+    --red:#ff5c5c;
+    --amber:#ffb454;
+    --offwhite:#e9f4ee;
+    --muted:#8aa89a;
+    --muted-2:#5f7d6e;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--offwhite);
+    font-family:var(--sans);
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Grille fine façon terminal */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(57,255,136,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(57,255,136,.045) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  /* Voile de scan discret */
+  body::after{
+    content:"";position:fixed;left:0;right:0;top:-140px;height:140px;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(57,255,136,.05));
+    animation:scan 10s linear infinite;
+  }
+  @keyframes scan{
+    0%{transform:translateY(0)}
+    100%{transform:translateY(calc(100vh + 140px))}
+  }
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(5,10,8,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1180px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .logo{
+    font-family:var(--mono);font-weight:700;font-size:15px;color:var(--green);
+    text-decoration:none;letter-spacing:.4px;white-space:nowrap;
+  }
+  .logo .prompt{color:var(--muted-2)}
+  .logo .caret{animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .nav-links{display:flex;align-items:center;gap:26px;font-family:var(--mono);font-size:13px}
+  .nav-links a{color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--green)}
+  .btn-ghost{
+    font-family:var(--mono);font-size:13px;color:var(--green);
+    border:1px solid var(--line-strong);border-radius:6px;padding:8px 14px;
+    text-decoration:none;transition:all .2s;background:transparent;cursor:pointer;
+  }
+  .btn-ghost:hover{background:rgba(57,255,136,.08);box-shadow:0 0 18px rgba(57,255,136,.18)}
+
+  /* ---------- Hero ---------- */
+  header.hero{position:relative;padding:96px 0 72px}
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:12px;color:var(--green);
+    border:1px solid var(--line-strong);border-radius:6px;
+    padding:7px 12px;margin-bottom:26px;background:rgba(57,255,136,.05);
+  }
+  .dot-live{
+    width:8px;height:8px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 10px var(--green);animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{opacity:.35}}
+  .hero h1{
+    font-family:var(--mono);font-weight:700;font-size:clamp(30px,4.6vw,50px);
+    line-height:1.14;letter-spacing:-.5px;margin-bottom:22px;
+    text-shadow:0 0 42px rgba(57,255,136,.22);
+  }
+  .hero h1 .hl{color:var(--green);position:relative}
+  .hero h1 .hl::after{
+    content:"";position:absolute;left:0;right:0;bottom:2px;height:3px;
+    background:linear-gradient(90deg,var(--green),transparent);
+  }
+  .hero p.lead{color:var(--muted);font-size:17px;max-width:54ch;margin-bottom:34px}
+  .hero p.lead strong{color:var(--offwhite);font-weight:600}
+  .hero-cta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:14.5px;font-weight:500;
+    padding:14px 22px;border-radius:6px;text-decoration:none;cursor:pointer;
+    border:1px solid transparent;transition:all .2s;letter-spacing:.2px;
+  }
+  .btn-primary{
+    background:var(--green);color:#03120a;
+    box-shadow:0 0 26px rgba(57,255,136,.35);
+  }
+  .btn-primary:hover{background:#7dffb4;box-shadow:0 0 40px rgba(57,255,136,.5);transform:translateY(-1px)}
+  .btn-outline{
+    color:var(--green);border-color:var(--line-strong);background:transparent;
+  }
+  .btn-outline:hover{background:rgba(57,255,136,.07);box-shadow:0 0 20px rgba(57,255,136,.18)}
+  .hero-meta{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted-2);
+    display:flex;gap:22px;flex-wrap:wrap;
+  }
+  .hero-meta span::before{content:"▸ ";color:var(--green-dim)}
+
+  /* Fenêtre terminal décorative */
+  .term{
+    background:var(--panel);border:1px solid var(--line-strong);border-radius:8px;
+    box-shadow:0 0 0 1px rgba(5,10,8,.9),0 0 44px rgba(57,255,136,.12), inset 0 0 60px rgba(57,255,136,.03);
+    font-family:var(--mono);font-size:12.6px;line-height:1.75;overflow:hidden;
+  }
+  .term-bar{
+    display:flex;align-items:center;gap:8px;padding:10px 14px;
+    border-bottom:1px solid var(--line);background:var(--bg-2);
+  }
+  .term-bar .t{flex:1;color:var(--muted-2);font-size:11.5px;letter-spacing:.5px}
+  .term-bar i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .term-bar i:nth-child(1){background:#ff5c5c}
+  .term-bar i:nth-child(2){background:#ffb454}
+  .term-bar i:nth-child(3){background:var(--green)}
+  .term-body{padding:16px 18px 18px}
+  .term-body .c{color:var(--muted-2)}
+  .term-body .g{color:var(--green)}
+  .term-body .w{color:var(--amber)}
+  .term-body .r{color:var(--red)}
+  .term-body .dim{color:var(--muted)}
+  .term-body .line{white-space:pre-wrap;word-break:break-word}
+  .term-cursor{display:inline-block;width:8px;height:15px;background:var(--green);vertical-align:middle;animation:blink 1.1s steps(1) infinite}
+  .term-scanline{
+    position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);
+    opacity:.35;animation:scanline 4.2s linear infinite;
+  }
+  @keyframes scanline{0%{top:8%}100%{top:96%}}
+  .term-holder{position:relative}
+
+  /* ---------- Sections communes ---------- */
+  section{padding:84px 0}
+  .sec-head{margin-bottom:48px}
+  .sec-tag{
+    font-family:var(--mono);font-size:12.5px;color:var(--green);letter-spacing:.6px;
+    margin-bottom:14px;
+  }
+  .sec-tag::before{content:"$ "}
+  .sec-head h2{
+    font-family:var(--mono);font-size:clamp(23px,3.2vw,34px);font-weight:700;
+    letter-spacing:-.3px;line-height:1.25;
+  }
+  .sec-head h2 .hl{color:var(--green)}
+  .sec-head p{color:var(--muted);max-width:68ch;margin-top:14px;font-size:15.5px}
+
+  /* ---------- Marché 2026 ---------- */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .stat{
+    background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    padding:24px 22px;position:relative;overflow:hidden;transition:border-color .25s, box-shadow .25s;
+  }
+  .stat:hover{border-color:var(--line-strong);box-shadow:0 0 26px rgba(57,255,136,.09)}
+  .stat::before{
+    content:attr(data-idx);position:absolute;top:10px;right:14px;
+    font-family:var(--mono);font-size:11px;color:var(--muted-2);
+  }
+  .stat .big{
+    font-family:var(--mono);font-weight:700;font-size:26px;color:var(--green);
+    margin-bottom:10px;letter-spacing:-.5px;
+  }
+  .stat h3{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--offwhite);margin-bottom:8px}
+  .stat p{font-size:13.8px;color:var(--muted)}
+
+  /* ---------- Menaces ---------- */
+  .threats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .threat{
+    background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;display:flex;flex-direction:column;
+    transition:border-color .25s, box-shadow .25s;
+  }
+  .threat:hover{border-color:rgba(255,92,92,.4);box-shadow:0 0 30px rgba(255,92,92,.08)}
+  .threat-head{
+    display:flex;align-items:center;gap:9px;padding:12px 16px;
+    border-bottom:1px solid var(--line);background:var(--bg-2);
+    font-family:var(--mono);font-size:12px;color:var(--red);
+  }
+  .threat-head .tag-ico{font-size:13px}
+  .threat-body{padding:20px 18px 24px;flex:1}
+  .threat-body h3{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--offwhite);margin-bottom:10px}
+  .threat-body p{font-size:14px;color:var(--muted)}
+  .threat-body p strong{color:var(--offwhite);font-weight:600}
+  .threat-code{
+    margin-top:16px;background:var(--bg);border:1px dashed rgba(255,92,92,.3);
+    border-radius:6px;padding:11px 13px;font-family:var(--mono);font-size:11.6px;line-height:1.8;
+    color:var(--muted);
+  }
+  .threat-code .r{color:var(--red)}
+  .threat-code .g{color:var(--green)}
+  .threat-code .w{color:var(--amber)}
+
+  /* ---------- Piliers ---------- */
+  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .pillar{
+    background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    padding:26px 22px;position:relative;overflow:hidden;
+    transition:border-color .25s, box-shadow .25s;
+  }
+  .pillar:hover{border-color:var(--line-strong);box-shadow:0 0 28px rgba(57,255,136,.1)}
+  .pillar .num{
+    font-family:var(--mono);font-size:12px;color:var(--muted-2);letter-spacing:1px;
+    display:block;margin-bottom:14px;
+  }
+  .pillar .num b{color:var(--green)}
+  .pillar h3{font-family:var(--mono);font-size:15.5px;font-weight:700;color:var(--offwhite);margin-bottom:10px}
+  .pillar p{font-size:13.6px;color:var(--muted)}
+  .pillar .glyph{
+    position:absolute;right:-14px;bottom:-20px;font-family:var(--mono);
+    font-size:88px;font-weight:700;color:rgba(57,255,136,.05);pointer-events:none;user-select:none;
+  }
+
+  /* ---------- Offres ---------- */
+  .offers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .offer{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:32px 28px;display:flex;flex-direction:column;position:relative;
+    transition:border-color .25s, box-shadow .25s, transform .25s;
+  }
+  .offer:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+  .offer.featured{
+    border-color:var(--green);box-shadow:0 0 0 1px rgba(57,255,136,.5), 0 0 44px rgba(57,255,136,.14);
+  }
+  .offer .flag{
+    position:absolute;top:-12px;left:24px;
+    background:var(--green);color:#03120a;font-family:var(--mono);font-size:11px;font-weight:700;
+    padding:4px 12px;border-radius:4px;letter-spacing:.6px;
+  }
+  .offer .name{font-family:var(--mono);font-size:13px;letter-spacing:.8px;color:var(--green-dim);text-transform:uppercase}
+  .offer .price{
+    font-family:var(--mono);font-weight:700;font-size:40px;color:var(--offwhite);
+    margin:14px 0 4px;letter-spacing:-1px;
+  }
+  .offer .price small{font-size:15px;color:var(--muted-2);font-weight:400;letter-spacing:0}
+  .offer .price-note{font-family:var(--mono);font-size:11.5px;color:var(--muted-2);margin-bottom:20px}
+  .offer ul{list-style:none;margin-bottom:26px;flex:1}
+  .offer li{
+    font-size:13.8px;color:var(--muted);padding:7px 0 7px 22px;position:relative;
+  }
+  .offer li::before{content:"▸";position:absolute;left:0;color:var(--green)}
+  .offer li strong{color:var(--offwhite);font-weight:600}
+  .offer .btn{justify-content:center;width:100%}
+  .pay-note{
+    margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--muted-2);
+    text-align:center;border-top:1px dashed var(--line);padding-top:18px;
+  }
+
+  /* ---------- Formulaire ---------- */
+  .contact{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  .form-side h2{font-family:var(--mono);font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.25;margin-bottom:16px}
+  .form-side h2 .hl{color:var(--green)}
+  .form-side p{color:var(--muted);font-size:15px;margin-bottom:22px}
+  .form-side .disc{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted-2);line-height:2;
+    background:var(--panel);border:1px dashed var(--line-strong);border-radius:6px;padding:14px 16px;
+  }
+  .form-side .disc b{color:var(--green);font-weight:500}
+  form.cform{display:flex;flex-direction:column;gap:16px}
+  .field label{
+    display:block;font-family:var(--mono);font-size:12px;color:var(--green-dim);
+    margin-bottom:7px;letter-spacing:.3px;
+  }
+  .field label::before{content:"> "}
+  .field input,.field textarea{
+    width:100%;background:var(--bg);border:1px solid var(--line);
+    border-radius:6px;color:var(--offwhite);font-family:var(--sans);font-size:14.5px;
+    padding:13px 15px;transition:border-color .2s, box-shadow .2s;resize:vertical;
+  }
+  .field input:focus,.field textarea:focus{
+    outline:none;border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(57,255,136,.12);
+  }
+  .field textarea{min-height:110px}
+  .form-status{
+    font-family:var(--mono);font-size:13px;border-radius:6px;padding:12px 15px;display:none;
+  }
+  .form-status.ok{display:block;color:var(--green);border:1px solid rgba(57,255,136,.4);background:rgba(57,255,136,.06)}
+  .form-status.err{display:block;color:var(--red);border:1px solid rgba(255,92,92,.4);background:rgba(255,92,92,.06)}
+  .form-status.load{display:block;color:var(--amber);border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.06)}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:38px 0 46px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+  .foot .mono{font-family:var(--mono);font-size:12.5px;color:var(--muted-2)}
+  .foot a{color:var(--green-dim);text-decoration:none;font-family:var(--mono);font-size:12.5px}
+  .foot a:hover{color:var(--green)}
+  .foot .sig{font-family:var(--mono);font-size:11.5px;color:var(--muted-2)}
+  .foot .sig b{color:var(--green-dim);font-weight:500}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1024px){
+    .hero-grid{grid-template-columns:1fr;gap:44px}
+    .threats,.stats{grid-template-columns:1fr 1fr}
+    .pillars{grid-template-columns:1fr 1fr}
+    .offers{grid-template-columns:1fr;max-width:520px;margin:0 auto}
+    .form-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    header.hero{padding:64px 0 56px}
+    section{padding:64px 0}
+    .threats,.stats,.pillars{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .hero-cta .btn{width:100%;justify-content:center}
+    .term-body{font-size:11.4px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#top"><span class="prompt">~/agentsecure $</span> ./secure <span class="caret">▮</span></a>
+    <div class="nav-links">
+      <a href="#contexte">contexte</a>
+      <a href="#menaces">menaces</a>
+      <a href="#piliers">piliers</a>
+      <a href="#offres">offres</a>
+      <a class="btn-ghost" href="audit.html">audit gratuit →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="hero-badge"><span class="dot-live"></span> AGENT-SECURITY-MONITOR // 2026 — EN LIGNE</span>
+      <h1>Vos agents travaillent.<br>Qui les <span class="hl">surveille</span> ?</h1>
+      <p class="lead">
+        En 2026, chaque PME déploie des agents IA : tri des emails, CRM, facturation, support.
+        Sans garde-fous, un agent devient un risque — <strong>données exfiltrées, permissions escaladées,
+        actions jamais validées</strong>. AgentSecure sécurise vos agents avant que le premier incident ne vous coûte cher.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="audit.html">▸ Lancer l'audit gratuit</a>
+        <a class="btn btn-outline" href="#offres">Voir les packs</a>
+      </div>
+      <div class="hero-meta">
+        <span>5 minutes chrono</span>
+        <span>Score de risque /100</span>
+        <span>Recommandations immédiates</span>
+      </div>
+    </div>
+    <div class="term-holder">
+      <div class="term-scanline"></div>
+      <div class="term">
+        <div class="term-bar"><i></i><i></i><i></i><span class="t">agentsecure — journal de bord // session 2026</span></div>
+        <div class="term-body">
+          <div class="line"><span class="c">$</span> scan --perimetre --tous-les-agents</div>
+          <div class="line"><span class="g">▸ 3 agents détectés en production</span></div>
+          <div class="line"><span class="g">▸ agent.email-triage : accès CRM + contacts ✓</span></div>
+          <div class="line"><span class="w">⚠ agent.crm-sync : permissions ÉLEVÉES (admin)</span></div>
+          <div class="line"><span class="r">🚨 exfiltration suspecte → POST api.external.io</span></div>
+          <div class="line"><span class="r">🚨 action non validée : envoi de 1 204 emails</span></div>
+          <div class="line"><span class="c">$</span> statut : <span class="g">non surveillé</span> · risque : <span class="r">critique</span></div>
+          <div class="line"><span class="c">$</span> remediation --plan <span class="dim">…</span><span class="term-cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= CONTEXTE 2026 ================= -->
+<section id="contexte">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">cat ./contexte-2026.log</div>
+      <h2>Le marché a basculé : <span class="hl">de « pourquoi adopter » à « comment contenir »</span></h2>
+      <p>Les agents voyous font la une. Les coûts s'effondrent. L'adoption explose dans les PME — et la sécurité des agents devient le nouveau champ de bataille.</p>
+    </div>
+    <div class="stats">
+      <div class="stat" data-idx="01">
+        <div class="big">À LA UNE</div>
+        <h3>Les agents voyous font les gros titres</h3>
+        <p>Des agents qui exfiltrent des données ou agissent sans validation font la une de la presse tech. Le risque n'est plus théorique : il est documenté, public, et il touche aussi les petites structures.</p>
+      </div>
+      <div class="stat" data-idx="02">
+        <div class="big">−50 % / −52 %</div>
+        <h3>La chute des coûts a explosé l'adoption</h3>
+        <p>Gemini −50 %, Palmyra −52 % : déployer un agent coûte aujourd'hui deux fois moins cher qu'il y a un an. Résultat : des dizaines d'agents tournent dans les PME, souvent sans aucun contrôle.</p>
+      </div>
+      <div class="stat" data-idx="03">
+        <div class="big">NOUVEAU CHAMP DE BATAILLE</div>
+        <h3>La question n'est plus « pourquoi », mais « comment contenir »</h3>
+        <p>Chaque agent connecté est une porte d'entrée. Les grandes entreprises ont des SOC. Les PME, elles, n'ont ni le temps ni les outils — c'est exactement le vide qu'AgentSecure vient combler.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MENACES ================= -->
+<section id="menaces" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">ls ./menaces-reelles</div>
+      <h2>Trois menaces réelles, <span class="hl">pas de la science-fiction</span></h2>
+      <p>Ce sont les scénarios que nous voyons dans les PME qui déploient des agents sans garde-fous. Chacun d'eux se règle — mais seulement si vous le savez.</p>
+    </div>
+    <div class="threats">
+      <article class="threat">
+        <div class="threat-head"><span class="tag-ico">⇉</span> EXFILTRATION</div>
+        <div class="threat-body">
+          <h3>L'agent envoie des données à un service non autorisé</h3>
+          <p>Un agent connecté à votre CRM transmet les fiches clients vers un <strong>endpoint externe jamais validé</strong> — par erreur de configuration, par prompt malveillant, ou par un outil tiers. Personne ne le remarque : aucun journal, aucune alerte.</p>
+          <div class="threat-code">
+            <span class="g">POST</span> <span class="w">api.external-service.io/v2/sync</span><br>
+            body: { clients: <span class="r">[1 247 fiches]</span>, mails: <span class="r">true</span> }<br>
+            <span class="g">→</span> <span class="r">200 OK — personne n'a rien vu</span>
+          </div>
+        </div>
+      </article>
+      <article class="threat">
+        <div class="threat-head"><span class="tag-ico">↑</span> ESCALADE</div>
+        <div class="threat-body">
+          <h3>L'agent escalade ses permissions</h3>
+          <p>Doté d'un accès limité, l'agent <strong>demande plus de droits</strong> — et les obtient, par défaut, sans validation. Il touche alors à la facturation, aux RH, aux secrets de l'entreprise. Le moindre privilège n'est pas un luxe : c'est la première ligne de défense.</p>
+          <div class="threat-code">
+            <span class="w">> agent</span> : demande accès facturation<br>
+            <span class="w">> système</span> : <span class="r">accordé (défaut)</span><br>
+            <span class="g">▸ impact</span> : <span class="r">droits admin non révoqués depuis 9 mois</span>
+          </div>
+        </div>
+      </article>
+      <article class="threat">
+        <div class="threat-head"><span class="tag-ico">⚡</span> AUTONOMIE</div>
+        <div class="threat-body">
+          <h3>L'agent agit sans validation humaine</h3>
+          <p>L'agent envoie 1 200 emails, supprime des doublons, passe une commande — <strong>sans qu'aucun humain n'ait validé</strong>. L'autonomie sans garde-fou devient un passif : une seule action à fort impact mal exécutée, et la confiance s'effondre.</p>
+          <div class="threat-code">
+            <span class="g">> action</span> : envoi groupé — 1 204 emails<br>
+            <span class="g">> validation</span> : <span class="r">aucune</span><br>
+            <span class="g">> destinataires</span> : <span class="r">liste entière + mauvais fichiers joints</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PILIERS ================= -->
+<section id="piliers">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">./architecture-defense --afficher</div>
+      <h2>Quatre piliers pour <span class="hl">contenir vos agents</span></h2>
+      <p>La même méthode que les SOC des grandes entreprises, simplifiée pour les PME. Chaque pilier se met en place en quelques jours — pas en quelques mois.</p>
+    </div>
+    <div class="pillars">
+      <article class="pillar">
+        <span class="num"><b>01</b> // PERMISSIONS</span>
+        <h3>Moindre privilège</h3>
+        <p>Chaque agent n'a que les accès strictement nécessaires à sa mission. Pas un de plus. Révocation rapide à la fin de chaque mission.</p>
+        <span class="glyph">01</span>
+      </article>
+      <article class="pillar">
+        <span class="num"><b>02</b> // CONTRÔLE</span>
+        <h3>Validation humaine</h3>
+        <p>Les actions à fort impact passent par un humain. Règle des deux yeux pour les opérations sensibles : envoi groupé, paiement, suppression.</p>
+        <span class="glyph">02</span>
+      </article>
+      <article class="pillar">
+        <span class="num"><b>03</b> // VISIBILITÉ</span>
+        <h3>Monitoring & journaux</h3>
+        <p>Chaque action est journalisée, horodatée, surveillée. Les comportements anormaux — service inconnu, volume inhabituel — déclenchent des alertes.</p>
+        <span class="glyph">03</span>
+      </article>
+      <article class="pillar">
+        <span class="num"><b>04</b> // PREUVE</span>
+        <h3>Tests</h3>
+        <p>Scénarios adverses, injections, simulations d'incident : vos agents sont éprouvés avant la mise en production, puis régulièrement.</p>
+        <span class="glyph">04</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFFRES ================= -->
+<section id="offres" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">./offres --disponibles</div>
+      <h2>Trois offres, <span class="hl">un objectif : reprendre le contrôle</span></h2>
+      <p>Commencez par l'audit gratuit — il est réel, complet, et vous donne un score de risque exploitable en 5 minutes.</p>
+    </div>
+    <div class="offers">
+      <article class="offer">
+        <div class="name">Audit express</div>
+        <div class="price">0 €<small> / gratuit</small></div>
+        <div class="price-note">sans engagement, résultat immédiat</div>
+        <ul>
+          <li><strong>15 questions</strong> — 5 minutes chrono</li>
+          <li><strong>Score de risque /100</strong> calculé en direct</li>
+          <li><strong>4 niveaux</strong> : critique, élevé, modéré, sain</li>
+          <li><strong>5 recommandations</strong> personnalisées selon vos réponses</li>
+          <li>Export PDF de votre rapport</li>
+        </ul>
+        <a class="btn btn-outline" href="audit.html">Lancer l'audit →</a>
+      </article>
+      <article class="offer featured">
+        <span class="flag">LE PLUS CHOISI</span>
+        <div class="name">Pack Protection</div>
+        <div class="price">49 €<small> / une fois</small></div>
+        <div class="price-note">livré sous 48 h ouvrées — PDF + versions modifiables</div>
+        <ul>
+          <li><strong>Checklist 40 points</strong> classés en 8 catégories</li>
+          <li><strong>4 procédures prêtes à l'emploi</strong> : moindre privilège, validation humaine, monitoring, journaux</li>
+          <li><strong>Modèle de politique</strong> de permissions des agents</li>
+          <li><strong>Plan de revue</strong> trimestriel pour rester à jour</li>
+          <li>Accompagnement par email inclus</li>
+        </ul>
+        <a class="btn btn-primary" href="#contact" data-offer="protection">Commander — 49 €</a>
+      </article>
+      <article class="offer">
+        <div class="name">Pack Entreprise</div>
+        <div class="price">149 €<small> / une fois</small></div>
+        <div class="price-note">audit complet + plan de correction</div>
+        <ul>
+          <li><strong>Audit complet</strong> de vos agents : accès, données, permissions, flux</li>
+          <li><strong>Plan de correction priorisé</strong> par niveau de risque</li>
+          <li><strong>Lettre de conformité</strong> pour vos clients et partenaires</li>
+          <li><strong>Session de restitution</strong> d'1 h avec l'expert</li>
+          <li>Suivi 30 jours après mise en place</li>
+        </ul>
+        <a class="btn btn-outline" href="#contact" data-offer="entreprise">Demander le pack — 149 €</a>
+      </article>
+    </div>
+    <p class="pay-note">Paiement par virement ou message direct — facture fournie. Expert indépendant en cybersécurité et agents IA.</p>
+  </div>
+</section>
+
+<!-- ================= CONTACT / EMAILJS ================= -->
+<section class="contact" id="contact">
+  <div class="wrap form-grid">
+    <div class="form-side">
+      <div class="sec-tag" style="margin-bottom:14px">./contact --nouveau-message</div>
+      <h2>Une question ? <span class="hl">Parlons-en.</span></h2>
+      <p>Décrivez votre situation : quels agents vous utilisez, ce qui vous inquiète, ce que vous voulez sécuriser. Réponse sous 24 h ouvrées, sans jargon inutile.</p>
+      <div class="disc">
+        <b>▸ Confidentialité :</b> vos données ne sont ni revendues, ni utilisées pour du marketing.<br>
+        <b>▸ Gratuit :</b> le premier échange n'engage à rien.<br>
+        <b>▸ Direct :</b> vous parlez à l'expert, pas à un commercial.
+      </div>
+    </div>
+    <form class="cform" id="leadForm" novalidate>
+      <input type="hidden" name="site" value="AgentSecure">
+      <div class="field">
+        <label for="name">Votre nom</label>
+        <input type="text" id="name" name="name" placeholder="Marie Dupont" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="email">Votre email</label>
+        <input type="email" id="email" name="email" placeholder="marie@entreprise.fr" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="question">Votre question</label>
+        <textarea id="question" name="question" placeholder="Ex. : nous avons 4 agents connectés à notre CRM et personne ne les surveille. Par où commencer ?" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Envoyer le message ▸</button>
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap foot">
+    <div class="mono">© 2026 AgentSecure — Sécurisez vos agents IA · <a href="mailto:contact@agentsecure.fr">contact@agentsecure.fr</a></div>
+    <div class="sig">expert indépendant <b>cybersécurité × agents IA</b> · SOC mindset, format PME</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function () {
+    "use strict";
+
+    /* ---------- Pré-remplissage du formulaire depuis les offres ---------- */
+    var prefill = {
+      protection: "Bonjour, je souhaite commander le Pack Protection (49 €). Merci de m'indiquer les modalités de paiement et de livraison.",
+      entreprise: "Bonjour, je souhaite commander le Pack Entreprise (149 €). Merci de m'indiquer les modalités de paiement et de livraison."
+    };
+    document.querySelectorAll("[data-offer]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-offer");
+        if (prefill[key]) {
+          var q = document.getElementById("question");
+          if (q && !q.value.trim()) { q.value = prefill[key]; }
+        }
+      });
+    });
+
+    /* ---------- EmailJS ---------- */
+    var form = document.getElementById("leadForm");
+    var status = document.getElementById("formStatus");
+    var submitBtn = document.getElementById("submitBtn");
+
+    if (window.emailjs) {
+      emailjs.init({ publicKey: "8Pui4ZEqxW2jRVF7h" });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!window.emailjs) {
+        status.className = "form-status err";
+        status.textContent = "[ERR] service de messagerie indisponible — écrivez-nous directement : contact@agentsecure.fr";
+        return;
+      }
+      var name = document.getElementById("name").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var question = document.getElementById("question").value.trim();
+      if (!name || !email || !question) {
+        status.className = "form-status err";
+        status.textContent = "[ERR] merci de remplir tous les champs.";
+        return;
+      }
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+      if (!emailOk) {
+        status.className = "form-status err";
+        status.textContent = "[ERR] adresse email invalide.";
+        return;
+      }
+
+      status.className = "form-status load";
+      status.textContent = "[OK] transmission en cours…";
+      submitBtn.disabled = true;
+
+      emailjs.send(
+        "service_cy1ytdb",
+        "template_xpo58cv",
+        {
+          site: "AgentSecure",
+          name: name,
+          email: email,
+          question: question
+        }
+      ).then(function () {
+        status.className = "form-status ok";
+        status.textContent = "[OK] message transmis — réponse sous 24 h ouvrées.";
+        form.reset();
+        submitBtn.disabled = false;
+      }, function (err) {
+        console.error("EmailJS error:", err);
+        status.className = "form-status err";
+        status.textContent = "[ERR] l'envoi a échoué. Réessayez ou écrivez-nous directement : contact@agentsecure.fr";
+        submitBtn.disabled = false;
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit gratuit — Score de risque de vos agents IA | AgentSecure</title>
+<meta name="description" content="Audit gratuit en 15 questions : mesurez le niveau de sécurité de vos agents IA en 5 minutes. Score /100, 4 niveaux de risque, 5 recommandations personnalisées, export PDF.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050a08;
+    --bg-2:#081210;
+    --panel:#0a1512;
+    --panel-2:#0d1a16;
+    --line:rgba(57,255,136,.14);
+    --line-strong:rgba(57,255,136,.38);
+    --green:#39ff88;
+    --green-dim:#1fbf6a;
+    --green-deep:#0e5c38;
+    --red:#ff5c5c;
+    --orange:#ff9f43;
+    --amber:#ffd166;
+    --offwhite:#e9f4ee;
+    --muted:#8aa89a;
+    --muted-2:#5f7d6e;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--offwhite);
+    font-family:var(--sans);line-height:1.65;
+    overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(57,255,136,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(57,255,136,.045) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  .wrap{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(5,10,8,.86);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1180px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .logo{
+    font-family:var(--mono);font-weight:700;font-size:15px;color:var(--green);
+    text-decoration:none;letter-spacing:.4px;white-space:nowrap;
+  }
+  .logo .prompt{color:var(--muted-2)}
+  .nav-back{
+    font-family:var(--mono);font-size:13px;color:var(--muted);
+    text-decoration:none;border:1px solid var(--line);border-radius:6px;
+    padding:8px 14px;transition:all .2s;
+  }
+  .nav-back:hover{color:var(--green);border-color:var(--line-strong)}
+
+  /* ---------- Hero audit ---------- */
+  header.audit-hero{padding:72px 0 40px}
+  .audit-hero .badge{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:12px;color:var(--green);
+    border:1px solid var(--line-strong);border-radius:6px;
+    padding:7px 12px;margin-bottom:22px;background:rgba(57,255,136,.05);
+  }
+  .dot-live{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .audit-hero h1{
+    font-family:var(--mono);font-weight:700;font-size:clamp(26px,4vw,40px);
+    line-height:1.16;letter-spacing:-.5px;margin-bottom:16px;
+  }
+  .audit-hero h1 .hl{color:var(--green)}
+  .audit-hero p{color:var(--muted);font-size:15.5px;max-width:66ch;margin-bottom:26px}
+  .steps{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .steps span{border:1px solid var(--line);border-radius:6px;padding:9px 13px;background:var(--panel)}
+  .steps b{color:var(--green);font-weight:500}
+  .company-field{margin-top:24px}
+  .company-field label{display:block;font-family:var(--mono);font-size:12px;color:var(--green-dim);margin-bottom:7px}
+  .company-field label::before{content:"> "}
+  .company-field input{
+    width:100%;max-width:420px;background:var(--bg);border:1px solid var(--line);
+    border-radius:6px;color:var(--offwhite);font-family:var(--sans);font-size:14.5px;padding:12px 15px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .company-field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(57,255,136,.12)}
+
+  /* ---------- Barre de progression ---------- */
+  .progress-wrap{
+    position:sticky;top:61px;z-index:40;background:rgba(5,10,8,.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  .progress-inner{max-width:920px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px}
+  .progress-label{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .progress-label b{color:var(--green);font-weight:500}
+  .progress-track{flex:1;height:8px;background:var(--panel-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green-deep),var(--green));border-radius:99px;transition:width .35s ease}
+  .progress-score{font-family:var(--mono);font-size:13px;color:var(--muted-2);white-space:nowrap}
+  .progress-score b{color:var(--offwhite)}
+
+  /* ---------- Questions ---------- */
+  .quiz{padding:34px 0 20px}
+  .q{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:26px 26px 24px;margin-bottom:20px;
+    transition:border-color .25s, box-shadow .25s;
+  }
+  .q.answered{border-color:rgba(57,255,136,.3)}
+  .q:focus-within{border-color:var(--line-strong);box-shadow:0 0 24px rgba(57,255,136,.07)}
+  .q-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .q-num{
+    font-family:var(--mono);font-size:12px;font-weight:700;color:#03120a;
+    background:var(--green);border-radius:4px;padding:4px 9px;letter-spacing:.5px;
+  }
+  .q-cat{
+    font-family:var(--mono);font-size:11.5px;color:var(--green-dim);
+    border:1px solid var(--line);border-radius:4px;padding:4px 9px;letter-spacing:.4px;
+  }
+  .q h3{font-size:16px;font-weight:600;line-height:1.45;margin-bottom:16px;color:var(--offwhite)}
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{
+    display:flex;align-items:flex-start;gap:12px;
+    border:1px solid var(--line);border-radius:7px;padding:12px 15px;
+    cursor:pointer;transition:all .18s;background:var(--bg);
+  }
+  .opt:hover{border-color:var(--line-strong);background:rgba(57,255,136,.04)}
+  .opt input{appearance:none;-webkit-appearance:none;margin-top:4px;flex-shrink:0;width:17px;height:17px;border-radius:50%;border:2px solid var(--muted-2);cursor:pointer;transition:all .18s;position:relative}
+  .opt input:checked{border-color:var(--green)}
+  .opt input:checked::after{
+    content:"";position:absolute;inset:2.5px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 8px var(--green);
+  }
+  .opt input:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  .opt .txt{font-size:14px;color:var(--muted);line-height:1.5}
+  .opt.selected{border-color:rgba(57,255,136,.5);background:rgba(57,255,136,.05)}
+  .opt.selected .txt{color:var(--offwhite)}
+  .opt .pts{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted-2);flex-shrink:0;padding-top:3px}
+  .opt.selected .pts{color:var(--green)}
+
+  .quiz-actions{display:flex;gap:14px;margin:30px 0 10px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:14px;font-weight:500;
+    padding:14px 22px;border-radius:6px;text-decoration:none;cursor:pointer;
+    border:1px solid transparent;transition:all .2s;letter-spacing:.2px;
+  }
+  .btn-primary{background:var(--green);color:#03120a;box-shadow:0 0 26px rgba(57,255,136,.35)}
+  .btn-primary:hover{background:#7dffb4;box-shadow:0 0 40px rgba(57,255,136,.5)}
+  .btn-outline{color:var(--green);border-color:var(--line-strong);background:transparent}
+  .btn-outline:hover{background:rgba(57,255,136,.07);box-shadow:0 0 20px rgba(57,255,136,.18)}
+
+  /* ---------- Résultats ---------- */
+  #results{scroll-margin-top:140px}
+  .results-panel{
+    background:var(--panel);border:1px solid var(--line-strong);border-radius:12px;
+    padding:36px 32px;margin:26px 0 70px;position:relative;overflow:hidden;
+    box-shadow:0 0 0 1px rgba(5,10,8,.9),0 0 44px rgba(57,255,136,.08);
+  }
+  .results-panel::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--green),transparent);
+  }
+  .res-head{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:28px}
+  .score-box{display:flex;align-items:baseline;gap:8px;flex:1;min-width:200px}
+  .score-num{
+    font-family:var(--mono);font-weight:700;font-size:64px;letter-spacing:-2px;line-height:1;
+  }
+  .score-num .unit{font-size:22px;color:var(--muted-2);letter-spacing:0}
+  .score-label{font-family:var(--mono);font-size:12px;color:var(--muted-2);margin-top:8px}
+  .level-box{border-left:1px solid var(--line);padding-left:26px}
+  .level-name{
+    font-family:var(--mono);font-weight:700;font-size:21px;letter-spacing:.5px;margin-bottom:6px;
+  }
+  .level-desc{font-size:13.8px;color:var(--muted);max-width:44ch}
+  .level-desc b{color:var(--offwhite);font-weight:600}
+
+  .res-title{
+    font-family:var(--mono);font-size:13px;color:var(--green);letter-spacing:.5px;
+    margin:26px 0 14px;display:flex;align-items:center;gap:10px;
+  }
+  .res-title::before{content:"▸"}
+  .cat-bars{display:grid;grid-template-columns:1fr 1fr;gap:12px 30px}
+  .cat-bar .cat-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;margin-bottom:5px}
+  .cat-bar .cat-top span:first-child{color:var(--muted)}
+  .cat-bar .cat-top b{color:var(--offwhite);font-weight:500}
+  .cat-bar .track{height:7px;background:var(--bg-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+  .cat-bar .fill{height:100%;width:0%;border-radius:99px;transition:width .5s ease}
+  .lv-red{background:linear-gradient(90deg,#7a1f1f,var(--red))}
+  .lv-orange{background:linear-gradient(90deg,#7a4a10,var(--orange))}
+  .lv-amber{background:linear-gradient(90deg,#7a6410,var(--amber))}
+  .lv-green{background:linear-gradient(90deg,var(--green-deep),var(--green))}
+
+  .recs{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+  .rec{
+    display:flex;gap:13px;align-items:flex-start;
+    border:1px solid var(--line);border-left:3px solid var(--green);
+    border-radius:7px;padding:13px 16px;background:var(--bg);
+  }
+  .rec .idx{font-family:var(--mono);font-weight:700;color:var(--green);font-size:13px;flex-shrink:0;padding-top:1px}
+  .rec p{font-size:14px;color:var(--muted);line-height:1.55}
+  .rec p strong{color:var(--offwhite);font-weight:600}
+
+  .res-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px;align-items:center}
+  .res-actions .hint{font-family:var(--mono);font-size:11.5px;color:var(--muted-2)}
+
+  /* ---------- État vide ---------- */
+  .empty-hint{
+    font-family:var(--mono);font-size:13px;color:var(--muted-2);
+    border:1px dashed var(--line);border-radius:8px;padding:22px;text-align:center;margin-bottom:30px;
+  }
+
+  /* ---------- CTA bas ---------- */
+  .cta-band{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--bg-2);padding:56px 0;text-align:center;
+  }
+  .cta-band h2{font-family:var(--mono);font-size:clamp(20px,3vw,28px);font-weight:700;margin-bottom:14px}
+  .cta-band h2 .hl{color:var(--green)}
+  .cta-band p{color:var(--muted);max-width:60ch;margin:0 auto 24px;font-size:14.5px}
+  .cta-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:0 auto 30px;text-align:left}
+  .cta-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px 24px;text-decoration:none;color:inherit;transition:all .22s;display:block}
+  .cta-card:hover{border-color:var(--line-strong);transform:translateY(-2px);box-shadow:0 0 26px rgba(57,255,136,.1)}
+  .cta-card .cc-name{font-family:var(--mono);font-size:12px;color:var(--green-dim);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+  .cta-card .cc-price{font-family:var(--mono);font-weight:700;font-size:26px;color:var(--offwhite);margin-bottom:8px}
+  .cta-card .cc-price small{font-size:13px;color:var(--muted-2);font-weight:400}
+  .cta-card p{font-size:13.5px;color:var(--muted);margin:0}
+  .cta-card .cc-go{font-family:var(--mono);font-size:12.5px;color:var(--green);margin-top:14px;display:block}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:34px 0 44px}
+  .foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+  .foot .mono{font-family:var(--mono);font-size:12px;color:var(--muted-2)}
+  .foot a{color:var(--green-dim);text-decoration:none}
+  .foot a:hover{color:var(--green)}
+
+  /* ---------- En-tête d'impression ---------- */
+  .print-head{display:none}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:760px){
+    .cat-bars{grid-template-columns:1fr}
+    .cta-cards{grid-template-columns:1fr}
+    .progress-score{display:none}
+    .level-box{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:18px;width:100%}
+    .results-panel{padding:28px 20px}
+  }
+  @media (max-width:560px){
+    header.audit-hero{padding:52px 0 32px}
+    .q{padding:20px 16px}
+    .score-num{font-size:52px}
+  }
+
+  /* ---------- Impression / PDF ---------- */
+  @media print{
+    @page{margin:14mm}
+    body{background:#fff;color:#000}
+    body::before{display:none}
+    nav,.progress-wrap,.company-field,.quiz,.quiz-actions,.res-actions,.cta-band,footer,.empty-hint{display:none!important}
+    .print-head{
+      display:block;border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:22px;
+    }
+    .print-head .ph-logo{font-family:var(--mono);font-weight:700;font-size:15px;color:#000;letter-spacing:.4px}
+    .print-head .ph-meta{font-family:var(--mono);font-size:11.5px;color:#444;margin-top:6px;line-height:1.7}
+    #results{margin:0;scroll-margin-top:0}
+    .results-panel{
+      border:1.5px solid #111;border-radius:0;padding:26px;margin:0;
+      box-shadow:none;background:#fff;color:#000;
+    }
+    .results-panel::before{display:none}
+    .score-num{color:#000}
+    .score-num .unit{color:#555}
+    .score-label{color:#555}
+    .level-name{color:#000}
+    .level-desc,.level-desc b{color:#222}
+    .level-desc b{color:#000}
+    .res-title{color:#0a7a3d}
+    .cat-bar .cat-top span:first-child{color:#444}
+    .cat-bar .cat-top b{color:#000}
+    .cat-bar .track{background:#eee;border-color:#ccc}
+    .rec{border:1px solid #bbb;border-left:3px solid #0a7a3d;background:#fafafa;break-inside:avoid}
+    .rec p{color:#222}
+    .rec p strong{color:#000}
+    .rec .idx{color:#0a7a3d}
+    .q-num,.badge,.dot-live{background:#0a7a3d;color:#fff}
+    .lv-red{background:#c0392b}
+    .lv-orange{background:#e67e22}
+    .lv-amber{background:#b7950b}
+    .lv-green{background:#0a7a3d}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><span class="prompt">~/agentsecure $</span> ./audit-express</a>
+    <a class="nav-back" href="index.html">← retour au site</a>
+  </div>
+</nav>
+
+<!-- ================= HERO AUDIT ================= -->
+<header class="audit-hero">
+  <div class="wrap">
+    <span class="badge"><span class="dot-live"></span> AUDIT GRATUIT — SANS ENGAGEMENT</span>
+    <h1>Quel est le niveau de risque de <span class="hl">vos agents IA</span> ?</h1>
+    <p>15 questions, 5 minutes. Chaque réponse alimente un score de risque réel sur 100, calculé en direct selon la méthode des SOC : accès, données, permissions, validation humaine, monitoring, tests, incident et gouvernance.</p>
+    <div class="steps">
+      <span><b>01</b> Répondez aux 15 questions</span>
+      <span><b>02</b> Obtenez votre score /100</span>
+      <span><b>03</b> Appliquez les 5 recommandations</span>
+    </div>
+    <div class="company-field no-print">
+      <label for="company">Nom de votre entreprise (optionnel — apparaît sur le rapport PDF)</label>
+      <input type="text" id="company" placeholder="Ex. : SARL Dupont & Fils" autocomplete="organization">
+    </div>
+  </div>
+</header>
+
+<!-- ================= PROGRESSION ================= -->
+<div class="progress-wrap no-print">
+  <div class="progress-inner">
+    <span class="progress-label">répondues <b id="pCount">0</b>/15</span>
+    <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+    <span class="progress-score">score : <b id="pScore">—</b>/100</span>
+  </div>
+</div>
+
+<!-- ================= QUESTIONNAIRE ================= -->
+<main class="quiz wrap" id="quiz" aria-label="Questionnaire d'audit">
+  <noscript>
+    <p style="color:var(--red);font-family:var(--mono);font-size:14px">[ERR] cet outil nécessite JavaScript pour calculer votre score.</p>
+  </noscript>
+</main>
+
+<div class="wrap">
+  <div class="quiz-actions no-print">
+    <button class="btn btn-primary" id="seeResults" type="button">Voir mon score ▸</button>
+    <button class="btn btn-outline" id="resetBtn" type="button">Recommencer</button>
+  </div>
+  <div class="empty-hint no-print" id="emptyHint">En attente de réponses — votre score apparaîtra ici, calculé en direct.</div>
+</div>
+
+<!-- ================= RÉSULTATS ================= -->
+<section id="results" aria-live="polite">
+  <div class="wrap">
+    <div class="results-panel" id="resultsPanel">
+      <div class="res-head">
+        <div class="score-box">
+          <div>
+            <div class="score-num" id="scoreNum">—<span class="unit">/100</span></div>
+            <div class="score-label">score de risque de vos agents</div>
+          </div>
+        </div>
+        <div class="level-box">
+          <div class="level-name" id="levelName">En attente</div>
+          <p class="level-desc" id="levelDesc">Répondez aux questions pour calculer votre score.</p>
+        </div>
+      </div>
+
+      <div class="res-title">Répartition par catégorie</div>
+      <div class="cat-bars" id="catBars"></div>
+
+      <div class="res-title">Recommandations prioritaires</div>
+      <div class="recs" id="recs"></div>
+
+      <div class="res-actions no-print">
+        <button class="btn btn-primary" id="printBtn" type="button">🖨 Imprimer / PDF</button>
+        <a class="btn btn-outline" href="index.html#offres">Passer à l'action →</a>
+        <span class="hint">astuce : « Enregistrer en PDF » dans la fenêtre d'impression</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA BAS ================= -->
+<section class="cta-band no-print">
+  <div class="wrap">
+    <h2>Votre score en main, <span class="hl">passez à l'action</span></h2>
+    <p>L'audit vous dit où vous en êtes. Les packs vous donnent le mode d'emploi pour sécuriser vos agents — procédures prêtes à l'emploi, sans jargon.</p>
+    <div class="cta-cards">
+      <a class="cta-card" href="index.html#offres">
+        <div class="cc-name">Pack Protection</div>
+        <div class="cc-price">49 € <small>· une fois</small></div>
+        <p>Checklist 40 points + 4 procédures : moindre privilège, validation humaine, monitoring, journaux.</p>
+        <span class="cc-go">Découvrir ▸</span>
+      </a>
+      <a class="cta-card" href="index.html#offres">
+        <div class="cc-name">Pack Entreprise</div>
+        <div class="cc-price">149 € <small>· une fois</small></div>
+        <p>Audit complet, plan de correction priorisé et lettre de conformité pour vos clients.</p>
+        <span class="cc-go">Découvrir ▸</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap foot">
+    <span class="mono">© 2026 AgentSecure — Sécurisez vos agents IA · <a href="mailto:contact@agentsecure.fr">contact@agentsecure.fr</a></span>
+    <span class="mono">audit-express v1.0 — méthode SOC, format PME</span>
+  </div>
+</footer>
+
+<!-- ================= EN-TÊTE D'IMPRESSION ================= -->
+<div class="print-head">
+  <div class="ph-logo">AgentSecure — Rapport d'audit des agents IA</div>
+  <div class="ph-meta" id="printMeta">Entreprise : — · Date : — · Audit gratuit — 15 questions</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ================= DONNÉES : 15 QUESTIONS ================= */
+  var CATS = {
+    acces:        "Accès & authentification",
+    donnees:      "Données",
+    permissions:  "Permissions",
+    validation:   "Validation humaine",
+    monitoring:   "Monitoring & journaux",
+    tests:        "Tests de sécurité",
+    incident:     "Réponse à incident",
+    gouvernance:  "Gouvernance"
+  };
+
+  var QUESTIONS = [
+    {
+      id: "q1", cat: "gouvernance",
+      q: "Savez-vous précisément quels agents IA tournent dans votre entreprise ?",
+      opts: [
+        { t: "Non, aucune vue d'ensemble", pts: 0 },
+        { t: "Partiellement — plusieurs agents ne sont pas répertoriés", pts: 2 },
+        { t: "Oui, la plupart sont répertoriés", pts: 4 },
+        { t: "Oui, inventaire complet et tenu à jour", pts: 6 }
+      ]
+    },
+    {
+      id: "q2", cat: "permissions",
+      q: "Vos agents disposent-ils des droits minimums pour accomplir leurs tâches (moindre privilège) ?",
+      opts: [
+        { t: "Non, ils utilisent des comptes à droits étendus", pts: 0 },
+        { t: "Pas vraiment — les droits sont accordés au cas par cas, sans règle", pts: 2 },
+        { t: "En partie — certains agents ont plus de droits que nécessaire", pts: 5 },
+        { t: "Oui, le moindre privilège est appliqué et revu régulièrement", pts: 8 }
+      ]
+    },
+    {
+      id: "q3", cat: "acces",
+      q: "Comment vos agents s'authentifient-ils auprès de vos outils et services ?",
+      opts: [
+        { t: "Clés API partagées ou identifiants génériques", pts: 0 },
+        { t: "Comptes dédiés, sans authentification renforcée (MFA)", pts: 2 },
+        { t: "Comptes dédiés avec MFA", pts: 5 },
+        { t: "Comptes dédiés, MFA, secrets dans un coffre avec rotation", pts: 8 }
+      ]
+    },
+    {
+      id: "q4", cat: "donnees",
+      q: "Vos agents peuvent-ils atteindre des données sensibles (clients, RH, paiement, secrets) ?",
+      opts: [
+        { t: "Oui, librement", pts: 0 },
+        { t: "Oui, mais seulement certains agents", pts: 2 },
+        { t: "Oui, avec restriction par agent et par finalité", pts: 5 },
+        { t: "Non, cloisonnement strict par finalité", pts: 8 }
+      ]
+    },
+    {
+      id: "q5", cat: "donnees",
+      q: "Les données manipulées par vos agents sont-elles chiffrées ?",
+      opts: [
+        { t: "Non", pts: 0 },
+        { t: "En transit uniquement", pts: 2 },
+        { t: "En transit et au repos, pour la plupart", pts: 4 },
+        { t: "Oui, systématiquement, avec gestion des clés", pts: 6 }
+      ]
+    },
+    {
+      id: "q6", cat: "permissions",
+      q: "Un agent peut-il modifier ou supprimer des données critiques (base clients, facturation) ?",
+      opts: [
+        { t: "Oui, sans aucune restriction", pts: 0 },
+        { t: "Oui, certains agents le peuvent", pts: 2 },
+        { t: "Uniquement via des actions dédiées et contrôlées", pts: 4 },
+        { t: "Non — droits en écriture limités et justifiés", pts: 6 }
+      ]
+    },
+    {
+      id: "q7", cat: "validation",
+      q: "Un humain valide-t-il les actions à fort impact (envoi groupé, paiement, suppression) ?",
+      opts: [
+        { t: "Non, l'agent agit de façon totalement autonome", pts: 0 },
+        { t: "Rarement — la validation dépend des personnes", pts: 2 },
+        { t: "Oui, pour les actions critiques", pts: 5 },
+        { t: "Oui, validation systématique avec double approbation si besoin", pts: 8 }
+      ]
+    },
+    {
+      id: "q8", cat: "gouvernance",
+      q: "Qui est autorisé à créer, modifier ou connecter un agent ?",
+      opts: [
+        { t: "Tout le monde, sans aucun contrôle", pts: 0 },
+        { t: "Les développeurs, sans validation", pts: 2 },
+        { t: "Une personne désignée, avec validation", pts: 4 },
+        { t: "Rôles définis et processus de validation écrit", pts: 6 }
+      ]
+    },
+    {
+      id: "q9", cat: "monitoring",
+      q: "Les actions de vos agents sont-elles journalisées ?",
+      opts: [
+        { t: "Non, aucun journal", pts: 0 },
+        { t: "Partiellement — journaux incomplets", pts: 2 },
+        { t: "Oui, journaux détaillés", pts: 5 },
+        { t: "Oui, détaillés, horodatés, conservés et protégés", pts: 8 }
+      ]
+    },
+    {
+      id: "q10", cat: "monitoring",
+      q: "Qui consulte ces journaux, et à quelle fréquence ?",
+      opts: [
+        { t: "Personne", pts: 0 },
+        { t: "Uniquement en cas d'incident", pts: 2 },
+        { t: "Revue périodique (hebdomadaire ou mensuelle)", pts: 4 },
+        { t: "Revue continue, complétée par des alertes automatiques", pts: 6 }
+      ]
+    },
+    {
+      id: "q11", cat: "monitoring",
+      q: "Avez-vous des alertes en cas de comportement anormal (appel à un service inconnu, volume inhabituel) ?",
+      opts: [
+        { t: "Non, aucune alerte", pts: 0 },
+        { t: "Pas d'alertes, mais les journaux existent", pts: 2 },
+        { t: "Alertes basiques sur quelques événements", pts: 4 },
+        { t: "Alertes sur seuils, avec procédure de déclenchement", pts: 6 }
+      ]
+    },
+    {
+      id: "q12", cat: "tests",
+      q: "Vos agents sont-ils testés du point de vue de la sécurité ?",
+      opts: [
+        { t: "Jamais", pts: 0 },
+        { t: "Tests fonctionnels uniquement", pts: 2 },
+        { t: "Tests de sécurité ponctuels", pts: 4 },
+        { t: "Tests réguliers : scénarios adverses, injections, simulations", pts: 6 }
+      ]
+    },
+    {
+      id: "q13", cat: "gouvernance",
+      q: "Existe-t-il une politique écrite de gestion des permissions de vos agents ?",
+      opts: [
+        { t: "Non, rien d'écrit", pts: 0 },
+        { t: "En cours de rédaction", pts: 2 },
+        { t: "Oui, mais elle est peu appliquée", pts: 4 },
+        { t: "Oui, appliquée et revue chaque trimestre", pts: 6 }
+      ]
+    },
+    {
+      id: "q14", cat: "acces",
+      q: "Comment révoquez-vous l'accès d'un agent (départ d'un salarié, fin d'un projet) ?",
+      opts: [
+        { t: "C'est long ou impossible en pratique", pts: 0 },
+        { t: "À la demande, sans trace écrite", pts: 2 },
+        { t: "Une procédure définie existe", pts: 4 },
+        { t: "Révocation rapide, automatisée et tracée", pts: 6 }
+      ]
+    },
+    {
+      id: "q15", cat: "incident",
+      q: "Avez-vous un plan de réponse en cas d'incident impliquant un agent (fuite de données, action non autorisée) ?",
+      opts: [
+        { t: "Non, aucun plan", pts: 0 },
+        { t: "On improvise le moment venu", pts: 2 },
+        { t: "Une procédure d'isolation est définie", pts: 4 },
+        { t: "Plan complet : isolation, analyse, notification, post-mortem", pts: 6 }
+      ]
+    }
+  ];
+
+  /* ================= RECOMMANDATIONS PAR CATÉGORIE ================= */
+  var RECS = {
+    acces: {
+      weak: "Centralisez l'authentification de vos agents : comptes dédiés, MFA obligatoire, secrets dans un coffre avec rotation automatique. Prévoyez une révocation possible en moins d'une heure.",
+      moderate: "Renforcez l'accès de vos agents : activez le MFA partout où c'est possible et formalisez une procédure de révocation rapide (départ, fin de mission)."
+    },
+    donnees: {
+      weak: "Cloisonnez les données : chaque agent n'accède qu'aux données strictement nécessaires à sa mission, avec chiffrement en transit et au repos. Commencez par les données les plus sensibles.",
+      moderate: "Vérifiez le chiffrement des données manipulées par vos agents et restreignez l'accès aux données sensibles par agent et par finalité."
+    },
+    permissions: {
+      weak: "Appliquez le moindre privilège sans attendre : auditez les droits actuels de chaque agent, retirez les accès superflus et bloquez toute élévation de permissions sans validation.",
+      moderate: "Revoyez les droits étendus restants : listez les agents à privilèges, justifiez chacun, et planifiez la réduction de ceux qui ne sont pas indispensables."
+    },
+    validation: {
+      weak: "Instaurez la validation humaine sur toutes les actions à fort impact : envoi groupé, paiement, suppression. Sans exception, avec trace de l'approbation.",
+      moderate: "Étendez la validation humaine aux actions sensibles restantes et ajoutez la règle des deux yeux pour les plus critiques."
+    },
+    monitoring: {
+      weak: "Activez les journaux sur tous vos agents : chaque action horodatée, conservée et protégée. Ajoutez des alertes sur les comportements anormaux — service inconnu, volume inhabituel.",
+      moderate: "Renforcez la supervision : désignez qui consulte les journaux, à quelle fréquence, et reliez les alertes à une procédure de décision claire."
+    },
+    tests: {
+      weak: "Testez la sécurité de vos agents : scénarios adverses, tentatives d'injection, réaction face à une demande malveillante. À répéter après chaque mise à jour.",
+      moderate: "Formalisez un calendrier de tests de sécurité — au minimum trimestriel — et documentez les résultats pour mesurer vos progrès."
+    },
+    incident: {
+      weak: "Écrivez un plan de réponse à incident agent : comment isoler un agent, couper ses accès, analyser les journaux et notifier les personnes concernées.",
+      moderate: "Testez votre plan d'incident par un exercice simulé et définissez les canaux de notification internes avant le prochain incident."
+    },
+    gouvernance: {
+      weak: "Documentez votre parc d'agents : inventaire complet, responsable par agent, politique écrite de permissions, revue trimestrielle. Sans inventaire, il n'y a pas de contrôle.",
+      moderate: "Formalisez les rôles : qui crée, modifie, révoque un agent ? Avec validation écrite et revue trimestrielle des accès."
+    }
+  };
+
+  var GENERIC_RECS = [
+    "Relancez cet audit dans 90 jours : la sécurité des agents se mesure dans le temps, pas à l'instant T.",
+    "Formez vos équipes aux réflexes de sécurité : qui valide quoi, que faire en cas de doute.",
+    "Centralisez la documentation de vos agents : accès, permissions, responsable, procédure de révocation.",
+    "Tenez un registre des incidents et quasi-incidents : c'est votre meilleure source d'amélioration.",
+    "Capitalisez sur votre bonne base : automatisez les contrôles (revue des droits, alertes) et documentez vos procédures pour les rendre pérennes."
+  ];
+
+  var LEVELS = [
+    { min: 80, name: "SAIN", color: "#39ff88", desc: "Bon niveau de maîtrise de vos agents. Consolidez : automatisez les contrôles, formez les équipes, et visez la conformité pour en faire un argument commercial." },
+    { min: 60, name: "MODÉRÉ", color: "#ffd166", desc: "Une base existe, mais des angles morts demeurent. Consolidez vos points faibles avant de déployer de nouveaux agents." },
+    { min: 40, name: "ÉLEVÉ", color: "#ff9f43", desc: "Des risques majeurs sont ouverts. Priorisez la validation humaine et le moindre privilège dès ce mois-ci." },
+    { min: 0,  name: "CRITIQUE", color: "#ff5c5c", desc: "Vos agents évoluent hors de tout contrôle. Un incident est une question de temps : cloisonnez les accès et activez les journaux cette semaine." }
+  ];
+
+  /* ================= RENDU ================= */
+  var quiz = document.getElementById("quiz");
+  var answers = {};
+
+  function restore() {
+    try {
+      var saved = JSON.parse(sessionStorage.getItem("agentsecure-audit") || "{}");
+      if (saved && saved.answers) { answers = saved.answers; }
+    } catch (e) { answers = {}; }
+  }
+  function persist() {
+    try { sessionStorage.setItem("agentsecure-audit", JSON.stringify({ answers: answers })); } catch (e) {}
+  }
+
+  QUESTIONS.forEach(function (item, i) {
+    var card = document.createElement("article");
+    card.className = "q" + (answers[item.id] !== undefined ? " answered" : "");
+    card.setAttribute("data-q", item.id);
+
+    var head = document.createElement("div");
+    head.className = "q-head";
+    var num = document.createElement("span");
+    num.className = "q-num";
+    num.textContent = "Q" + String(i + 1).padStart(2, "0");
+    var cat = document.createElement("span");
+    cat.className = "q-cat";
+    cat.textContent = CATS[item.cat];
+    head.appendChild(num);
+    head.appendChild(cat);
+
+    var title = document.createElement("h3");
+    title.textContent = item.q;
+
+    var opts = document.createElement("div");
+    opts.className = "opts";
+    item.opts.forEach(function (opt, j) {
+      var label = document.createElement("label");
+      label.className = "opt" + (answers[item.id] === j ? " selected" : "");
+      var input = document.createElement("input");
+      input.type = "radio";
+      input.name = item.id;
+      input.value = String(j);
+      if (answers[item.id] === j) { input.checked = true; }
+      input.setAttribute("aria-label", opt.t);
+      var span = document.createElement("span");
+      span.className = "txt";
+      span.textContent = opt.t;
+      var pts = document.createElement("span");
+      pts.className = "pts";
+      pts.textContent = "+" + opt.pts + " pts";
+      label.appendChild(input);
+      label.appendChild(span);
+      label.appendChild(pts);
+      input.addEventListener("change", function () {
+        answers[item.id] = j;
+        card.classList.add("answered");
+        opts.querySelectorAll(".opt").forEach(function (l, k) {
+          l.classList.toggle("selected", k === j);
+        });
+        persist();
+        update();
+      });
+      opts.appendChild(label);
+    });
+
+    card.appendChild(head);
+    card.appendChild(title);
+    card.appendChild(opts);
+    quiz.appendChild(card);
+  });
+
+  /* ================= CALCUL ================= */
+  function compute() {
+    var total = 0, answeredCount = 0;
+    var catScores = {}, catMax = {};
+    Object.keys(CATS).forEach(function (k) { catScores[k] = 0; catMax[k] = 0; });
+
+    QUESTIONS.forEach(function (item) {
+      catMax[item.cat] += item.opts[item.opts.length - 1].pts;
+      if (answers[item.id] !== undefined) {
+        answeredCount++;
+        var pts = item.opts[answers[item.id]].pts;
+        total += pts;
+        catScores[item.cat] += pts;
+      }
+    });
+    return { total: total, answered: answeredCount, catScores: catScores, catMax: catMax };
+  }
+
+  function levelFor(score) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (score >= LEVELS[i].min) { return LEVELS[i]; }
+    }
+    return LEVELS[LEVELS.length - 1];
+  }
+
+  function buildRecommendations(res) {
+    var out = [];
+    var order = Object.keys(CATS).sort(function (a, b) {
+      var ra = res.catMax[a] ? res.catScores[a] / res.catMax[a] : 0;
+      var rb = res.catMax[b] ? res.catScores[b] / res.catMax[b] : 0;
+      return ra - rb;
+    });
+    order.forEach(function (cat) {
+      if (out.length >= 5) { return; }
+      var ratio = res.catMax[cat] ? res.catScores[cat] / res.catMax[cat] : 0;
+      if (ratio < 0.5) { out.push(RECS[cat].weak); }
+      else if (ratio < 0.8) { out.push(RECS[cat].moderate); }
+    });
+    var gi = 0;
+    while (out.length < 5 && gi < GENERIC_RECS.length) {
+      if (out.indexOf(GENERIC_RECS[gi]) === -1) { out.push(GENERIC_RECS[gi]); }
+      gi++;
+    }
+    return out.slice(0, 5);
+  }
+
+  /* ================= AFFICHAGE ================= */
+  var scoreNum = document.getElementById("scoreNum");
+  var levelName = document.getElementById("levelName");
+  var levelDesc = document.getElementById("levelDesc");
+  var catBars = document.getElementById("catBars");
+  var recsBox = document.getElementById("recs");
+  var pCount = document.getElementById("pCount");
+  var pFill = document.getElementById("pFill");
+  var pScore = document.getElementById("pScore");
+  var emptyHint = document.getElementById("emptyHint");
+  var resultsPanel = document.getElementById("resultsPanel");
+  var companyInput = document.getElementById("company");
+
+  function catColor(ratio) {
+    if (ratio >= 0.8) { return "lv-green"; }
+    if (ratio >= 0.6) { return "lv-amber"; }
+    if (ratio >= 0.4) { return "lv-orange"; }
+    return "lv-red";
+  }
+
+  function update() {
+    var res = compute();
+
+    pCount.textContent = String(res.answered);
+    pFill.style.width = (res.answered / QUESTIONS.length * 100) + "%";
+    pScore.textContent = res.answered ? String(res.total) : "—";
+
+    if (res.answered === 0) {
+      scoreNum.innerHTML = "—<span class=\"unit\">/100</span>";
+      levelName.textContent = "En attente";
+      levelDesc.textContent = "Répondez aux questions pour calculer votre score.";
+      catBars.innerHTML = "";
+      recsBox.innerHTML = "";
+      emptyHint.style.display = "block";
+      return;
+    }
+    emptyHint.style.display = "none";
+
+    var lvl = levelFor(res.total);
+    scoreNum.innerHTML = res.total + "<span class=\"unit\">/100</span>";
+    scoreNum.style.color = lvl.color;
+    levelName.textContent = "NIVEAU " + lvl.name;
+    levelName.style.color = lvl.color;
+    levelDesc.innerHTML = lvl.desc;
+
+    catBars.innerHTML = "";
+    Object.keys(CATS).forEach(function (k) {
+      var ratio = res.catMax[k] ? res.catScores[k] / res.catMax[k] : 0;
+      var pct = Math.round(ratio * 100);
+      var row = document.createElement("div");
+      row.className = "cat-bar";
+      var top = document.createElement("div");
+      top.className = "cat-top";
+      var name = document.createElement("span");
+      name.textContent = CATS[k];
+      var val = document.createElement("b");
+      val.textContent = pct + " %";
+      top.appendChild(name);
+      top.appendChild(val);
+      var track = document.createElement("div");
+      track.className = "track";
+      var fill = document.createElement("div");
+      fill.className = "fill " + catColor(ratio);
+      fill.style.width = pct + "%";
+      track.appendChild(fill);
+      row.appendChild(top);
+      row.appendChild(track);
+      catBars.appendChild(row);
+    });
+
+    var recs = buildRecommendations(res);
+    recsBox.innerHTML = "";
+    recs.forEach(function (r, i) {
+      var rec = document.createElement("div");
+      rec.className = "rec";
+      var idx = document.createElement("span");
+      idx.className = "idx";
+      idx.textContent = "0" + (i + 1);
+      var p = document.createElement("p");
+      var colonIdx = r.indexOf(":");
+      if (colonIdx > -1) {
+        var strong = document.createElement("strong");
+        strong.textContent = r.slice(0, colonIdx).trim() + " :";
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(" " + r.slice(colonIdx + 1).trim()));
+      } else {
+        p.textContent = r;
+      }
+      rec.appendChild(idx);
+      rec.appendChild(p);
+      recsBox.appendChild(rec);
+    });
+
+    resultsPanel.style.borderColor = lvl.color === "#39ff88" ? "rgba(57,255,136,.38)" : "rgba(255,92,92,.35)";
+  }
+
+  /* ================= ACTIONS ================= */
+  document.getElementById("seeResults").addEventListener("click", function () {
+    document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    answers = {};
+    try { sessionStorage.removeItem("agentsecure-audit"); } catch (e) {}
+    document.querySelectorAll(".q input[type=radio]").forEach(function (r) { r.checked = false; });
+    document.querySelectorAll(".q").forEach(function (c) { c.classList.remove("answered"); });
+    document.querySelectorAll(".opt").forEach(function (l) { l.classList.remove("selected"); });
+    update();
+    document.getElementById("quiz").scrollIntoView({ behavior: "smooth" });
+  });
+
+  document.getElementById("printBtn").addEventListener("click", function () {
+    window.print();
+  });
+
+  function updatePrintMeta() {
+    var company = companyInput.value.trim();
+    var d = new Date();
+    var dateStr = d.toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("printMeta").textContent =
+      "Entreprise : " + (company || "—") + " · Date : " + dateStr + " · Audit gratuit — 15 questions";
+  }
+  companyInput.addEventListener("input", updatePrintMeta);
+  updatePrintMeta();
+
+  restore();
+  update();
+})();
+</script>
+</body>
+</html>

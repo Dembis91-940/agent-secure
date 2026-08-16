@@ -42,7 +42,8 @@
     --amber:#ffb454;
     --offwhite:#e9f4ee;
     --muted:#8aa89a;
-    --muted-2:#5f7d6e;
+    --muted-2:#6c8c7b;
+    --grad-cta:linear-gradient(135deg,#39ff88 0%,#1fbf6a 100%);
     --mono:'JetBrains Mono',ui-monospace,monospace;
     --sans:'Inter',system-ui,-apple-system,sans-serif;
   }
@@ -140,10 +141,10 @@
     border:1px solid transparent;transition:all .2s;letter-spacing:.2px;
   }
   .btn-primary{
-    background:var(--green);color:#03120a;
-    box-shadow:0 0 26px rgba(57,255,136,.35);
+    background:var(--grad-cta);color:#03120a;
+    box-shadow:0 0 26px rgba(57,255,136,.4);
   }
-  .btn-primary:hover{background:#7dffb4;box-shadow:0 0 40px rgba(57,255,136,.5);transform:translateY(-1px)}
+  .btn-primary:hover{filter:brightness(1.08);box-shadow:0 0 44px rgba(57,255,136,.55);transform:translateY(-1px)}
   .btn-outline{
     color:var(--green);border-color:var(--line-strong);background:transparent;
   }
@@ -389,9 +390,10 @@
       <span class="hero-badge"><span class="dot-live"></span> AGENT-SECURITY-MONITOR // 2026 — EN LIGNE</span>
       <h1>Vos agents travaillent.<br>Qui les <span class="hl">surveille</span> ?</h1>
       <p class="lead">
-        En 2026, chaque PME déploie des agents IA : tri des emails, CRM, facturation, support.
-        Sans garde-fous, un agent devient un risque — <strong>données exfiltrées, permissions escaladées,
-        actions jamais validées</strong>. AgentSecure sécurise vos agents avant que le premier incident ne vous coûte cher.
+        Chaque PME déploie des agents IA — tri des emails, CRM, facturation, support.
+        Sans garde-fous, un agent devient un passif : <strong>données exfiltrées, permissions escaladées,
+        actions jamais validées</strong>. AgentSecure vous rend la visibilité et les garde-fous,
+        avant que le premier incident ne coûte cher.
       </p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="audit.html">▸ Lancer l'audit gratuit</a>
@@ -462,8 +464,8 @@
       <article class="threat">
         <div class="threat-head"><span class="tag-ico">⇉</span> EXFILTRATION</div>
         <div class="threat-body">
-          <h3>L'agent envoie des données à un service non autorisé</h3>
-          <p>Un agent connecté à votre CRM transmet les fiches clients vers un <strong>endpoint externe jamais validé</strong> — par erreur de configuration, par prompt malveillant, ou par un outil tiers. Personne ne le remarque : aucun journal, aucune alerte.</p>
+          <h3>Vos données clients partent sans laisser de trace</h3>
+          <p>Un agent connecté au CRM transmet les fiches clients vers un <strong>endpoint externe jamais validé</strong> — configuration erronée, prompt malveillant ou outil tiers. Aucun journal, aucune alerte : personne ne le remarque, jusqu'au jour où c'est une amende RGPD.</p>
           <div class="threat-code">
             <span class="g">POST</span> <span class="w">api.external-service.io/v2/sync</span><br>
             body: { clients: <span class="r">[1 247 fiches]</span>, mails: <span class="r">true</span> }<br>
@@ -474,8 +476,8 @@
       <article class="threat">
         <div class="threat-head"><span class="tag-ico">↑</span> ESCALADE</div>
         <div class="threat-body">
-          <h3>L'agent escalade ses permissions</h3>
-          <p>Doté d'un accès limité, l'agent <strong>demande plus de droits</strong> — et les obtient, par défaut, sans validation. Il touche alors à la facturation, aux RH, aux secrets de l'entreprise. Le moindre privilège n'est pas un luxe : c'est la première ligne de défense.</p>
+          <h3>L'agent obtient plus de droits que vous ne le pensez</h3>
+          <p>Doté d'un accès limité, l'agent <strong>demande plus de droits</strong> — et les obtient, par défaut, sans validation. Il touche alors à la facturation, aux RH, aux secrets de l'entreprise. Le moindre privilège n'est pas un luxe : c'est la première ligne de défense, et la vôtre est déjà franchie.</p>
           <div class="threat-code">
             <span class="w">> agent</span> : demande accès facturation<br>
             <span class="w">> système</span> : <span class="r">accordé (défaut)</span><br>
@@ -486,8 +488,8 @@
       <article class="threat">
         <div class="threat-head"><span class="tag-ico">⚡</span> AUTONOMIE</div>
         <div class="threat-body">
-          <h3>L'agent agit sans validation humaine</h3>
-          <p>L'agent envoie 1 200 emails, supprime des doublons, passe une commande — <strong>sans qu'aucun humain n'ait validé</strong>. L'autonomie sans garde-fou devient un passif : une seule action à fort impact mal exécutée, et la confiance s'effondre.</p>
+          <h3>L'agent agit sans validation — et ça vous revient</h3>
+          <p>1 204 emails envoyés, des doublons supprimés, une commande passée — <strong>sans qu'aucun humain n'ait validé</strong>. L'autonomie sans garde-fou devient un passif : une seule action à fort impact mal exécutée, et la confiance s'effondre — la vôtre et celle de vos clients.</p>
           <div class="threat-code">
             <span class="g">> action</span> : envoi groupé — 1 204 emails<br>
             <span class="g">> validation</span> : <span class="r">aucune</span><br>

@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentSecure — Sécurisez vos agents IA | Audit gratuit pour PME</title>
 <meta name="description" content="Vos agents IA travaillent. Qui les surveille ? AgentSecure sécurise les agents IA des PME : audit de risque gratuit, checklist 40 points, procédures de moindre privilège, validation humaine, monitoring et journaux.">
 <meta property="og:title" content="AgentSecure — Sécurisation de vos agents IA">
@@ -24,10 +27,14 @@
 }
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
   :root{
     --bg:#050a08;
     --bg-2:#081210;
@@ -365,9 +372,161 @@
   .reveal.visible{opacity:1;transform:none}
   @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
   @media print{.reveal{opacity:1!important;transform:none!important}}
+
+:root {
+--bg:#08090B; --bg-2:#101216; --panel:#0D0F13; --panel-2:#13161B;
+  --line:rgba(255,176,32,.16); --line-strong:rgba(255,176,32,.42);
+  --green:#FFB020; --green-dim:#D98E00; --green-deep:#5C3D00;
+  --red:#FF4D4D; --amber:#FFD98A; --offwhite:#F0F2F5; --muted:#98A2B3; --muted-2:#6B7686;
+  --grad-cta:linear-gradient(135deg,#FFB020 0%,#D98E00 100%);
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Inter',system-ui,sans-serif;
+}
+
+/* ============ FUTUR V3 — agent-secure ============ */
+:root {
+  --fv-a1:#FFB020; --fv-a2:#D98E00; --fv-a3:#FF4D4D; --fv-al:#FFD98A;
+  --fv-bg:#08090B; --fv-bg2:#101216; --fv-text:#F0F2F5; --fv-muted:#98A2B3;
+  --fv-tf:'JetBrains Mono',monospace; --fv-bf:'Inter',sans-serif;
+}
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--fv-bf), system-ui, sans-serif !important;
+  background:#08090B !important;
+  color:#F0F2F5 !important;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.title,.sec-title,.kicker,.logo,.brand {
+  font-family:var(--fv-tf), serif !important;
+  letter-spacing:-.01em;
+}
+::selection { background:rgba(255, 176, 32,.4); }
+/* ---------- Fond futuriste ---------- */
+.futur-bg {
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+  background:
+    radial-gradient(58% 44% at 16% 10%, rgba(255, 176, 32,.17), transparent 62%),
+    radial-gradient(50% 40% at 88% 22%, rgba(255, 77, 77,.13), transparent 60%),
+    radial-gradient(54% 46% at 60% 94%, rgba(217, 142, 0,.15), transparent 64%),
+    var(--fv-bg);
+}
+.futur-bg::before {
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255, 176, 32,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 176, 32,.06) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(ellipse 92% 72% at 50% 0%, #000 32%, transparent 100%);
+          mask-image:radial-gradient(ellipse 92% 72% at 50% 0%, #000 32%, transparent 100%);
+}
+.futur-bg::after {
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(34% 26% at 80% 16%, rgba(255, 176, 32,.12), transparent 70%);
+  animation:fvPulse 9s ease-in-out infinite;
+}
+@keyframes fvPulse {
+  0%,100% { opacity:.5; transform:scale(1); }
+  50% { opacity:1; transform:scale(1.1); }
+}
+/* ---------- Glassmorphism ---------- */
+.offer, .pillar, .threat, .cform, .form-card {
+  background:linear-gradient(160deg, rgba(255, 176, 32,.10), rgba(217, 142, 0,.05)) !important;
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid rgba(255, 176, 32,.28) !important;
+  border-radius:22px !important;
+  box-shadow:0 24px 60px -30px rgba(0,0,0,.75), 0 0 0 1px rgba(255, 176, 32,.06), 0 0 46px -14px rgba(255, 176, 32,.30);
+  transition:transform .32s ease, box-shadow .32s ease, border-color .32s ease;
+}
+.offer, .pillar, .threat, .cform, .form-card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 32px 72px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255, 176, 32,.13), 0 0 66px -10px rgba(255, 176, 32,.45);
+}
+/* ---------- Navigation ---------- */
+nav, .nav, .main-nav {
+  background:rgba(16, 18, 22,.78) !important;
+  backdrop-filter:blur(16px) saturate(170%);
+  -webkit-backdrop-filter:blur(16px) saturate(170%);
+  border-bottom:1px solid rgba(255, 176, 32,.2);
+}
+nav a, .nav a, .main-nav a { color:var(--fv-muted) !important; transition:color .25s, text-shadow .25s; }
+nav a:hover, .nav a:hover, .main-nav a:hover {
+  color:var(--fv-al) !important;
+  text-shadow:0 0 16px rgba(255, 176, 32,.9);
+}
+.logo, .brand { color:var(--fv-text) !important; }
+/* ---------- Boutons ---------- */
+.btn, .btn-primary, .bouton-principal, .cta-en-tete {
+  background:linear-gradient(135deg, #FFB020, #D98E00) !important;
+  border:none !important;
+  box-shadow:0 10px 32px -10px rgba(255, 176, 32,.7), 0 0 0 1px rgba(255, 176, 32,.25) !important;
+  transition:transform .25s, box-shadow .25s !important;
+  color:#F0F2F5 !important;
+}
+.btn:hover, .btn-primary:hover, .bouton-principal:hover {
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 16px 46px -10px rgba(255, 176, 32,.9), 0 0 24px rgba(255, 176, 32,.35) !important;
+}
+.btn-ghost, .btn-secondary, .bouton-contour {
+  background:rgba(255, 176, 32,.09) !important;
+  border:1px solid rgba(255, 176, 32,.42) !important;
+  color:var(--fv-text) !important;
+  backdrop-filter:blur(8px);
+  transition:transform .25s, background .25s, box-shadow .25s;
+}
+.btn-ghost:hover, .btn-secondary:hover, .bouton-contour:hover {
+  background:rgba(255, 176, 32,.18) !important;
+  box-shadow:0 0 34px -6px rgba(255, 176, 32,.6);
+  transform:translateY(-3px);
+}
+/* ---------- Badges / tags ---------- */
+.badge, .tag, .kicker, .etiquette, .sec-tag, .sur-titre, .num {
+  font-family:var(--fv-tf), serif !important;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:#FFD98A !important;
+}
+/* ---------- Champs ---------- */
+input, select, textarea, .champ, .field input, .field select, .form-box input {
+  background:rgba(255, 176, 32,.07) !important;
+  border:1px solid rgba(255, 176, 32,.28) !important;
+  color:var(--fv-text) !important;
+  border-radius:12px !important;
+  transition:border-color .25s, box-shadow .25s;
+}
+input:focus, select:focus, textarea:focus, .champ:focus {
+  border-color:rgba(255, 176, 32,.7) !important;
+  box-shadow:0 0 0 3px rgba(255, 176, 32,.16) !important;
+  outline:none;
+}
+/* ---------- Prix ---------- */
+.prix, .price, .montant { color:#FFD98A !important; }
+/* ---------- Réveil ---------- */
+.reveal { opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s ease; }
+.reveal.visible, .reveal.in { opacity:1; transform:none; }
+/* ---------- Titres glow ---------- */
+.title, .sec-title, h1, h2, .hero-title {
+  text-shadow:0 0 46px rgba(255, 176, 32,.28);
+}
+/* ---------- Extra par site ---------- */
+
+   .offer.featured { border-color:rgba(255,176,32,.5); box-shadow:0 0 40px rgba(255,176,32,.2); }
+   .price { color:var(--a1); }
+   .threat-code { border-left:3px solid var(--a3); }
+   
+/* ---------- Mobile ---------- */
+@media (max-width:760px) {
+  .futur-bg::before { background-size:32px 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation:none !important; transition:none !important; }
+  .reveal { opacity:1; transform:none; }
+}
+
 </style>
 </head>
 <body>
+<div class="futur-bg" aria-hidden="true"></div>
+
 
 <!-- ================= NAV ================= -->
 <nav>
@@ -633,7 +792,55 @@
   </div>
 </footer>
 
+
+
+
+
+
+
+
+<script>
+/* FUTUR V3 — compteurs animés */
+(function(){
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var sels = [".stat b", ".k-val", ".mini-stat b", "[data-count]"];
+  var els = [];
+  sels.forEach(function(s){ document.querySelectorAll(s).forEach(function(el){ els.push(el); }); });
+  if (!els.length || !("IntersectionObserver" in window)) return;
+  function parse(el){
+    var t = el.textContent.trim().replace(/\u00a0/g," ");
+    var m = t.match(/^(\d[\d\s]*(?:[.,]\d+)?)(.*)$/);
+    if (!m) return null;
+    var num = parseFloat(m[1].replace(/\s/g,"").replace(",", "."));
+    if (isNaN(num) || num > 9999999 || num < -9999999) return null;
+    return { target: num, suffix: m[2] || "", hasDec: /[.,]\d/.test(m[1]) };
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var el = en.target, p = parse(el);
+      if (!p) { io.unobserve(el); return; }
+      var start = null, dur = 1500;
+      function step(ts){
+        if (!start) start = ts;
+        var pr = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - pr, 3);
+        var val = p.target * eased;
+        el.textContent = (p.hasDec ? val.toLocaleString("fr-FR", {maximumFractionDigits:1}) : Math.round(val).toLocaleString("fr-FR")) + p.suffix;
+        if (pr < 1) requestAnimationFrame(step);
+        else el.textContent = (p.hasDec ? p.target.toLocaleString("fr-FR", {maximumFractionDigits:1}) : Math.round(p.target).toLocaleString("fr-FR")) + p.suffix;
+      }
+      requestAnimationFrame(step);
+      io.unobserve(el);
+    });
+  }, { threshold: .4 });
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="chatbot-config.js"></script>
+<script src="chatbot.js"></script>
 <script>
   (function () {
     "use strict";
@@ -728,7 +935,5 @@
   }
 })();
 </script>
-<script src="chatbot-config.js"></script>
-<script src="chatbot.js"></script>
 </body>
 </html>
